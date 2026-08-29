@@ -5,10 +5,10 @@ import pytest
 from agentforge_x.kernel.state import (
     AgentState,
     AIMessage,
-    PlanEntry,
     ArtifactRef,
     BudgetState,
     FleetEvent,
+    PlanEntry,
 )
 
 

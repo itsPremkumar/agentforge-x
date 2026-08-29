@@ -10,7 +10,7 @@ Uses simulated timestamps (seconds as floats) for deterministic testing.
 from __future__ import annotations
 
 import uuid
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -20,9 +20,9 @@ class AIMessage(BaseModel):
 
     role: str  # "user" | "assistant" | "system" | "tool"
     content: str
-    tool_calls: Optional[list[dict[str, Any]]] = None
-    tool_call_id: Optional[str] = None
-    ts: Optional[float] = None  # Simulated timestamp (seconds)
+    tool_calls: list[dict[str, Any]] | None = None
+    tool_call_id: str | None = None
+    ts: float | None = None  # Simulated timestamp (seconds)
 
 
 class PlanEntry(BaseModel):
@@ -32,10 +32,10 @@ class PlanEntry(BaseModel):
     instruction: str
     tool: str
     args: dict[str, Any] = Field(default_factory=dict)
-    depends_on: Optional[list[str]] = None
+    depends_on: list[str] | None = None
     status: str = "pending"  # pending | in_progress | completed | failed
-    result: Optional[str] = None
-    error: Optional[str] = None
+    result: str | None = None
+    error: str | None = None
     retry_count: int = 0
 
 
@@ -45,7 +45,7 @@ class ArtifactRef(BaseModel):
     id: str
     type: str  # e.g., "code", "data", "report"
     path: str
-    metadata: Optional[dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None
 
 
 class BudgetState(BaseModel):
@@ -59,7 +59,7 @@ class BudgetState(BaseModel):
     tokens_used: int = 0           # Tokens consumed so far
     max_retries: int = 3           # Max retry attempts per step
     halted: bool = False            # True if any budget was exceeded
-    halt_reason: Optional[str] = None  # runtime | llm_calls | tokens | subgraph_budget
+    halt_reason: str | None = None  # runtime | llm_calls | tokens | subgraph_budget
 
 
 class FleetEvent(BaseModel):
@@ -82,7 +82,7 @@ class AgentState(BaseModel):
     # Identity & routing
     agent_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     run_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    parent_agent_id: Optional[str] = None
+    parent_agent_id: str | None = None
 
     # Core working memory
     messages: list[AIMessage] = Field(default_factory=list)
@@ -95,7 +95,7 @@ class AgentState(BaseModel):
 
     # Lifecycle
     status: str = "idle"  # idle | planning | executing | critiquing | retrying | completed | failed | halted
-    error: Optional[str] = None
+    error: str | None = None
 
     # Budget tracking
     budget: BudgetState = Field(default_factory=BudgetState)
@@ -103,11 +103,11 @@ class AgentState(BaseModel):
     # Metadata (simulated timestamps)
     created_at: float = 0.0
     updated_at: float = 0.0
-    completed_at: Optional[float] = None
+    completed_at: float | None = None
 
     model_config = {"arbitrary_types_allowed": True}
 
-    def transition(self, new_status: str) -> "AgentState":
+    def transition(self, new_status: str) -> AgentState:
         """Transition to a new status. Returns self for chaining."""
         valid_statuses = {
             "idle", "planning", "executing", "critiquing",
@@ -160,6 +160,6 @@ class AgentState(BaseModel):
         return self.model_dump()
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "AgentState":
+    def from_dict(cls, data: dict[str, Any]) -> AgentState:
         """Deserialize from a checkpoint dict."""
         return cls(**data)

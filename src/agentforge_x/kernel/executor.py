@@ -8,12 +8,11 @@ from __future__ import annotations
 
 import asyncio
 import uuid
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
-from agentforge_x.kernel.state import AgentState, PlanEntry, ArtifactRef
-from agentforge_x.kernel.event_bus import EventBus, EventType
+from agentforge_x.kernel.state import AgentState, ArtifactRef, PlanEntry
 
 
 class ExecutionResult(BaseModel):
@@ -23,7 +22,7 @@ class ExecutionResult(BaseModel):
     output: str = ""
     duration_ms: float = 0.0
     artifacts: list[ArtifactRef] = Field(default_factory=list)
-    error: Optional[str] = None
+    error: str | None = None
     retryable: bool = True
 
 
@@ -67,7 +66,7 @@ class Executor:
 class ToolExecutor(Executor):
     """Executes plan steps against a ToolRegistry."""
 
-    def __init__(self, tools: Optional[ToolRegistry] = None):
+    def __init__(self, tools: ToolRegistry | None = None):
         self.tools = tools or ToolRegistry()
 
     def can_execute(self, step: PlanEntry) -> bool:
@@ -83,7 +82,7 @@ class ToolExecutor(Executor):
             )
 
         func = self.tools.get(step.tool)
-        call_id = str(uuid.uuid4())
+        str(uuid.uuid4())
         start = asyncio.get_event_loop().time()
 
         try:
@@ -122,7 +121,7 @@ class ToolExecutor(Executor):
 class MockExecutor(Executor):
     """Deterministic executor for testing."""
 
-    def __init__(self, results: Optional[list[ExecutionResult]] = None):
+    def __init__(self, results: list[ExecutionResult] | None = None):
         self._results = results or []
         self._call_idx = 0
 

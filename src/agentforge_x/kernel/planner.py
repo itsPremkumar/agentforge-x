@@ -7,10 +7,9 @@ The default implementation (LLMPlanner) can be swapped for a mock in tests.
 from __future__ import annotations
 
 import re
-from typing import Any, Optional
+from typing import Any
 
 from agentforge_x.kernel.state import AgentState, PlanEntry
-from agentforge_x.kernel.event_bus import EventBus, EventType
 
 
 class Planner:
@@ -20,7 +19,7 @@ class Planner:
         """Create a plan from the agent's current state + instructions."""
         raise NotImplementedError
 
-    async def replan(self, state: AgentState, failed_step_id: Optional[str] = None) -> list[PlanEntry]:
+    async def replan(self, state: AgentState, failed_step_id: str | None = None) -> list[PlanEntry]:
         """Re-plan when the current plan has failed or needs adjustment."""
         raise NotImplementedError
 
@@ -44,7 +43,7 @@ class MockPlanner(Planner):
         steps = self._decompose(instructions)
         return steps
 
-    async def replan(self, state: AgentState, failed_step_id: Optional[str] = None) -> list[PlanEntry]:
+    async def replan(self, state: AgentState, failed_step_id: str | None = None) -> list[PlanEntry]:
         steps = list(state.plan)
         if failed_step_id:
             for step in steps:

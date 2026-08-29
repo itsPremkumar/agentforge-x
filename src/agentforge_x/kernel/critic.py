@@ -11,13 +11,13 @@ Interface matches the architectural spec:
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
-from agentforge_x.kernel.state import AgentState, PlanEntry
-from agentforge_x.kernel.executor import ExecutionResult
 from agentforge_x.kernel.event_bus import EventBus, EventType
+from agentforge_x.kernel.executor import ExecutionResult
+from agentforge_x.kernel.state import AgentState, PlanEntry
 
 
 class Critique(BaseModel):
@@ -26,7 +26,7 @@ class Critique(BaseModel):
     passed: bool
     score: float = 0.0  # 0.0 to 1.0
     feedback: str = ""
-    suggested_fix: Optional[str] = None
+    suggested_fix: str | None = None
     criteria: list[dict[str, Any]] = Field(default_factory=list)
 
 
@@ -38,7 +38,7 @@ class Critic:
         state: AgentState,
         step: PlanEntry,
         result: ExecutionResult,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
     ) -> Critique:
         raise NotImplementedError
 
@@ -67,7 +67,7 @@ class MockCritic(Critic):
         state: AgentState,
         step: PlanEntry,
         result: ExecutionResult,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
     ) -> Critique:
         if self.always_pass:
             critique = Critique(
@@ -135,6 +135,4 @@ class MockCritic(Critic):
     def should_retry(self, state: AgentState, step: PlanEntry, failure: str) -> bool:
         if step.retry_count >= 3:
             return False
-        if self.always_fail:
-            return False
-        return True
+        return not self.always_fail

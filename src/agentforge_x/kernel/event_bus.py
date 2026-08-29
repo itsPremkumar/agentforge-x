@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import os
 import threading
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -30,7 +30,7 @@ class BusEvent(BaseModel):
         return json.dumps(self.model_dump(), default=str)
 
     @classmethod
-    def from_json(cls, line: str) -> "BusEvent":
+    def from_json(cls, line: str) -> BusEvent:
         """Parse a JSONL line into a BusEvent."""
         data = json.loads(line)
         return cls(**data)
@@ -94,9 +94,9 @@ class EventBus:
         self,
         run_id: str,
         agent_id: str = "primary",
-        output_path: Optional[str] = None,
+        output_path: str | None = None,
         buffer: bool = True,
-        sim_clock: Optional[Any] = None,
+        sim_clock: Any | None = None,
     ):
         self.run_id = run_id
         self.agent_id = agent_id
@@ -104,7 +104,7 @@ class EventBus:
         self._buffer: list[BusEvent] = []
         self._buffer_enabled = buffer
         self._lock = threading.Lock()
-        self._file_handle: Optional[Any] = None
+        self._file_handle: Any | None = None
         self._sim_clock = sim_clock
 
         if output_path:
@@ -121,9 +121,9 @@ class EventBus:
     def emit(
         self,
         event_type: str,
-        payload: Optional[dict[str, Any]] = None,
-        agent_id: Optional[str] = None,
-        ts: Optional[float] = None,
+        payload: dict[str, Any] | None = None,
+        agent_id: str | None = None,
+        ts: float | None = None,
     ) -> BusEvent:
         """Emit an event to the bus."""
         event = BusEvent(
@@ -143,7 +143,7 @@ class EventBus:
 
         return event
 
-    def get_events(self, event_type: Optional[str] = None) -> list[BusEvent]:
+    def get_events(self, event_type: str | None = None) -> list[BusEvent]:
         """Return buffered events, optionally filtered by type."""
         with self._lock:
             if event_type:
@@ -161,7 +161,7 @@ class EventBus:
             self._file_handle.close()
             self._file_handle = None
 
-    def __enter__(self) -> "EventBus":
+    def __enter__(self) -> EventBus:
         return self
 
     def __exit__(self, *args: Any) -> None:
@@ -171,7 +171,7 @@ class EventBus:
 def read_jsonl(path: str) -> list[BusEvent]:
     """Read all events from a JSONL file."""
     events = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:

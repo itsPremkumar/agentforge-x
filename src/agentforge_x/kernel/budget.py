@@ -7,12 +7,11 @@ overhead (5s runtime per spawn).
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from agentforge_x.kernel.state import AgentState, BudgetState
-
+from agentforge_x.kernel.state import BudgetState
 
 # Fixed overhead per subgraph spawn (spec §3.4)
 RUNTIME_OVERHEAD_PER_SPAWN = 5.0  # seconds
@@ -35,7 +34,7 @@ class BudgetEnforcer:
     Each agent has its own BudgetEnforcer wrapping its BudgetState.
     """
 
-    def __init__(self, budget: Optional[BudgetState] = None):
+    def __init__(self, budget: BudgetState | None = None):
         self.budget = budget or BudgetState()
 
     def can_spawn_subgraph(self, allocation: BudgetAllocation) -> bool:
@@ -122,6 +121,6 @@ class BudgetEnforcer:
         return self.budget.model_dump()
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "BudgetEnforcer":
+    def from_dict(cls, data: dict[str, Any]) -> BudgetEnforcer:
         """Deserialize from checkpoint."""
         return cls(budget=BudgetState(**data))

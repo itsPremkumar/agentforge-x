@@ -1,9 +1,7 @@
 """Tests for the JSONL event bus."""
 
-import os
-import pytest
 
-from agentforge_x.kernel.event_bus import EventBus, EventType, read_jsonl
+from agentforge_x.kernel.event_bus import EventBus, EventType
 
 
 class TestEventBus:

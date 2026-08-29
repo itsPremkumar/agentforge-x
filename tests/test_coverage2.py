@@ -1,16 +1,15 @@
 """Additional coverage tests to reach 85%."""
 
-import pytest
 
-from agentforge_x.kernel.budget import BudgetEnforcer, BudgetAllocation
+from agentforge_x.kernel.budget import BudgetAllocation, BudgetEnforcer
 from agentforge_x.kernel.checkpoint import SQLiteCheckpointStore
 from agentforge_x.kernel.critic import MockCritic
 from agentforge_x.kernel.event_bus import EventBus, EventType
-from agentforge_x.kernel.executor import MockExecutor, ExecutionResult
+from agentforge_x.kernel.executor import ExecutionResult, MockExecutor
 from agentforge_x.kernel.planner import MockPlanner
 from agentforge_x.kernel.retry import RetryScheduler
-from agentforge_x.kernel.state_graph import StateGraphRuntime, KernelConfig
 from agentforge_x.kernel.state import AgentState, BudgetState, PlanEntry
+from agentforge_x.kernel.state_graph import StateGraphRuntime
 
 
 class TestMoreCoverage:

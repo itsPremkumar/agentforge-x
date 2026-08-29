@@ -3,17 +3,16 @@
 from __future__ import annotations
 
 import uuid
-from typing import Any, Optional
 
-from agentforge_x.kernel.budget import BudgetEnforcer, BudgetAllocation, RUNTIME_OVERHEAD_PER_SPAWN
+from agentforge_x.kernel.budget import RUNTIME_OVERHEAD_PER_SPAWN, BudgetAllocation, BudgetEnforcer
 from agentforge_x.kernel.event_bus import EventBus, EventType
-from agentforge_x.kernel.state import AgentState, BudgetState, FleetEvent, AIMessage
+from agentforge_x.kernel.state import AgentState, AIMessage, BudgetState, FleetEvent
 
 
 class SubgraphSpawner:
     """Manages spawning of subgraph agents with budget enforcement."""
 
-    def __init__(self, budget: Optional[BudgetEnforcer] = None):
+    def __init__(self, budget: BudgetEnforcer | None = None):
         self.budget = budget
 
     def can_spawn(self, state: AgentState, allocation: BudgetAllocation) -> bool:
@@ -33,7 +32,7 @@ class SubgraphSpawner:
         state: AgentState,
         goal: str,
         allocation: BudgetAllocation,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
     ) -> tuple[str, AgentState]:
         """Spawn a new subgraph agent.
 
@@ -106,7 +105,7 @@ class SubgraphSpawner:
         parent_state: AgentState,
         subgraph_agent_id: str,
         result: str,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
     ) -> AgentState:
         """Record a subgraph's completion in the parent state."""
         fleet_event = FleetEvent(

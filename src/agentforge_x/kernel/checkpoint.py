@@ -19,7 +19,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import threading
-from typing import Any, Optional
+from typing import Any
 
 from agentforge_x.kernel.state import AgentState
 
@@ -93,8 +93,8 @@ class SQLiteCheckpointStore:
         self,
         run_id: str,
         agent_id: str,
-        seq: Optional[int] = None,
-    ) -> Optional[tuple[float, AgentState]]:
+        seq: int | None = None,
+    ) -> tuple[float, AgentState] | None:
         """Load a checkpoint.
 
         If seq is None, loads the latest checkpoint for the run/agent.
@@ -131,7 +131,7 @@ class SQLiteCheckpointStore:
         ).fetchall()
         return [row["seq"] for row in rows]
 
-    def latest_seq(self, run_id: str, agent_id: str) -> Optional[int]:
+    def latest_seq(self, run_id: str, agent_id: str) -> int | None:
         """Return the latest seq number, or None."""
         conn = self._get_conn()
         row = conn.execute(
@@ -153,7 +153,7 @@ class SQLiteCheckpointStore:
             self._local.conn.close()
             del self._local.conn
 
-    def __enter__(self) -> "SQLiteCheckpointStore":
+    def __enter__(self) -> SQLiteCheckpointStore:
         return self
 
     def __exit__(self, *args: Any) -> None:

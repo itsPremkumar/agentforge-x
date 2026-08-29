@@ -5,19 +5,15 @@ Orchestrates the planner -> executor -> critic -> retry loop.
 
 from __future__ import annotations
 
-import asyncio
-import time
-from typing import Any, Optional
+from pydantic import BaseModel
 
-from pydantic import BaseModel, Field
-
-from agentforge_x.kernel.budget import BudgetEnforcer, BudgetAllocation, RUNTIME_OVERHEAD_PER_SPAWN
+from agentforge_x.kernel.budget import RUNTIME_OVERHEAD_PER_SPAWN
 from agentforge_x.kernel.checkpoint import SQLiteCheckpointStore
-from agentforge_x.kernel.critic import Critic, MockCritic, Critique
+from agentforge_x.kernel.critic import Critic, MockCritic
 from agentforge_x.kernel.event_bus import EventBus, EventType
-from agentforge_x.kernel.executor import Executor, ToolExecutor, ExecutionResult, ToolRegistry
-from agentforge_x.kernel.planner import Planner, MockPlanner
-from agentforge_x.kernel.state import AgentState, PlanEntry, BudgetState, FleetEvent
+from agentforge_x.kernel.executor import Executor, ToolExecutor, ToolRegistry
+from agentforge_x.kernel.planner import MockPlanner, Planner
+from agentforge_x.kernel.state import AgentState, PlanEntry
 from agentforge_x.kernel.subgraph import SubgraphSpawner
 
 
@@ -38,12 +34,12 @@ class StateGraphRuntime:
 
     def __init__(
         self,
-        planner: Optional[Planner] = None,
-        executor: Optional[Executor] = None,
-        critic: Optional[Critic] = None,
-        tools: Optional[ToolRegistry] = None,
-        config: Optional[KernelConfig] = None,
-        checkpoint_store: Optional[SQLiteCheckpointStore] = None,
+        planner: Planner | None = None,
+        executor: Executor | None = None,
+        critic: Critic | None = None,
+        tools: ToolRegistry | None = None,
+        config: KernelConfig | None = None,
+        checkpoint_store: SQLiteCheckpointStore | None = None,
     ):
         self.config = config or KernelConfig()
         self.planner = planner or MockPlanner()
@@ -55,7 +51,7 @@ class StateGraphRuntime:
     async def run(
         self,
         state: AgentState,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
     ) -> AgentState:
         """Run the full agent execution loop."""
         if events:
@@ -193,7 +189,7 @@ class StateGraphRuntime:
 
         return state
 
-    def _get_next_step(self, state: AgentState) -> Optional[PlanEntry]:
+    def _get_next_step(self, state: AgentState) -> PlanEntry | None:
         """Get the next pending step whose dependencies are all completed."""
         completed_ids = {s.id for s in state.plan if s.status == "completed"}
         for step in state.plan:

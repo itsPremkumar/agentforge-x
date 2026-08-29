@@ -1,11 +1,10 @@
 """Tests for budget caps and enforcement."""
 
-import pytest
 
 from agentforge_x.kernel.budget import (
-    BudgetEnforcer,
-    BudgetAllocation,
     RUNTIME_OVERHEAD_PER_SPAWN,
+    BudgetAllocation,
+    BudgetEnforcer,
 )
 from agentforge_x.kernel.state import BudgetState
 

@@ -3,13 +3,10 @@
 import pytest
 
 from agentforge_x.kernel.executor import (
-    Executor,
     ToolExecutor,
     ToolRegistry,
-    ExecutionResult,
-    MockExecutor,
 )
-from agentforge_x.kernel.state import AgentState, PlanEntry, ArtifactRef
+from agentforge_x.kernel.state import AgentState, PlanEntry
 
 
 class TestExecutor:

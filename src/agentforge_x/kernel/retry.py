@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
-from typing import Any, Optional
 
 from agentforge_x.kernel.budget import BudgetEnforcer
 from agentforge_x.kernel.event_bus import EventBus, EventType
-from agentforge_x.kernel.state import AgentState, PlanEntry
+from agentforge_x.kernel.state import PlanEntry
 
 
 @dataclass
@@ -47,7 +46,7 @@ class RetryScheduler:
         self,
         step: PlanEntry,
         budget: BudgetEnforcer,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
         agent_id: str = "primary",
     ) -> RetryDecision:
         if step.retry_count >= budget.budget.max_retries:
@@ -78,7 +77,7 @@ class RetryScheduler:
         self,
         step: PlanEntry,
         budget: BudgetEnforcer,
-        events: Optional[EventBus] = None,
+        events: EventBus | None = None,
         agent_id: str = "primary",
     ) -> bool:
         decision = self.decide(step, budget, events, agent_id)

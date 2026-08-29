@@ -2,7 +2,7 @@
 
 import pytest
 
-from agentforge_x.kernel.planner import Planner, MockPlanner
+from agentforge_x.kernel.planner import MockPlanner
 from agentforge_x.kernel.state import AgentState, PlanEntry
 
 

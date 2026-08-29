@@ -2,10 +2,10 @@
 
 import pytest
 
-from agentforge_x.kernel.subgraph import SubgraphSpawner
-from agentforge_x.kernel.budget import BudgetEnforcer, BudgetAllocation, RUNTIME_OVERHEAD_PER_SPAWN
+from agentforge_x.kernel.budget import RUNTIME_OVERHEAD_PER_SPAWN, BudgetAllocation
 from agentforge_x.kernel.event_bus import EventBus, EventType
 from agentforge_x.kernel.state import AgentState, BudgetState
+from agentforge_x.kernel.subgraph import SubgraphSpawner
 
 
 class TestSubgraph:

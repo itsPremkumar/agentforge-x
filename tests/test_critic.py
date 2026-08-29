@@ -2,7 +2,7 @@
 
 import pytest
 
-from agentforge_x.kernel.critic import Critic, MockCritic, Critique
+from agentforge_x.kernel.critic import MockCritic
 from agentforge_x.kernel.executor import ExecutionResult
 from agentforge_x.kernel.state import AgentState, PlanEntry
 
