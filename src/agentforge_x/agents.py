@@ -92,9 +92,19 @@ class MultiAgentOrchestrator:
         results = {}
         for name, task in tasks.items():
             agent = self.agents.get(name)
+            if not agent:
+                continue
             if hasattr(agent, "run"):
                 result = await agent.run(task)
-                results[name] = result
+            elif hasattr(agent, "execute"):
+                result = await agent.execute(task)
+            elif hasattr(agent, "plan"):
+                result = await agent.plan(task)
+            elif hasattr(agent, "critique"):
+                result = await agent.critique(task)
+            else:
+                continue
+            results[name] = result
         return results
 
 
