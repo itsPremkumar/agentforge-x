@@ -46,7 +46,7 @@ known-first-party = ["agentforge_x"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = "--cov=src/agentforge_x/kernel --cov-report=term-missing --cov-fail-under=85"
+addopts = "--cov=src/agentforge_x/kernel --cov=src/agentforge_x/evolution --cov=src/agentforge_x/core --cov=src/agentforge_x/agents --cov=src/agentforge_x/tools --cov=src/agentforge_x/deployment --cov-report=term-missing --cov-fail-under=85"
 
 [tool.coverage.run]
 source = ["src/agentforge_x"]
