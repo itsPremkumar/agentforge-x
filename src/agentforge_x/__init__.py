@@ -1,47 +1,41 @@
-"""agentforge_x core kernel package.
+"""
+agentforge-x: Six-agent fleet with versioned prompts, rubric judging,
+and a thin kernel loop.
 
-StateGraph runtime, AgentState, checkpoints, event bus, and execution loop.
+Agents:
+- Researcher: Gathers and synthesizes information
+- Coder: Writes and refines code
+- Critic: Evaluates work against criteria
+- Tester: Finds bugs and edge cases
+- Writer: Produces documentation and prose
+- Ops: Manages deployment and infrastructure
+
+Each agent is a thin kernel loop: sense -> plan -> act -> critique -> repeat.
 """
 
-__version__ = "0.1.0"
+from agentforge_x.agent import Agent, AgentState, AgentType, Plan, Action, Critique, PromptSet, JudgeResult
+from agentforge_x.judge import Judge, RubricScore, Verdict, RubricCriterion
+from agentforge_x.presets import Preset, load_presets, get_preset
+from agentforge_x.mock import MockLLM, AgentMockLLM, JudgeMockLLM
 
-from agentforge_x.kernel.state import AgentState, BudgetState, PlanEntry, AIMessage, ArtifactRef, FleetEvent
-from agentforge_x.kernel.checkpoint import SQLiteCheckpointStore
-from agentforge_x.kernel.event_bus import EventBus, BusEvent, EventType
-from agentforge_x.kernel.budget import BudgetEnforcer, BudgetAllocation
-from agentforge_x.kernel.planner import Planner, MockPlanner
-from agentforge_x.kernel.executor import Executor, ToolExecutor, ToolRegistry, ExecutionResult
-from agentforge_x.kernel.critic import Critic, MockCritic, Critique
-from agentforge_x.kernel.state_graph import StateGraphRuntime
-from agentforge_x.kernel.config import KernelConfig
-from agentforge_x.kernel.subgraph import SubgraphSpawner
-from agentforge_x.kernel.retry import RetryScheduler, RetryDecision
-
+__version__ = "1.0.0"
 __all__ = [
+    "Agent",
     "AgentState",
-    "BudgetState",
-    "PlanEntry",
-    "AIMessage",
-    "ArtifactRef",
-    "FleetEvent",
-    "SQLiteCheckpointStore",
-    "EventBus",
-    "BusEvent",
-    "EventType",
-    "BudgetEnforcer",
-    "BudgetAllocation",
-    "Planner",
-    "MockPlanner",
-    "Executor",
-    "ToolExecutor",
-    "ToolRegistry",
-    "ExecutionResult",
-    "Critic",
-    "MockCritic",
+    "AgentType",
+    "Plan",
+    "Action",
     "Critique",
-    "StateGraphRuntime",
-    "KernelConfig",
-    "SubgraphSpawner",
-    "RetryScheduler",
-    "RetryDecision",
+    "PromptSet",
+    "JudgeResult",
+    "Judge",
+    "RubricScore",
+    "Verdict",
+    "RubricCriterion",
+    "Preset",
+    "load_presets",
+    "get_preset",
+    "MockLLM",
+    "AgentMockLLM",
+    "JudgeMockLLM",
 ]
