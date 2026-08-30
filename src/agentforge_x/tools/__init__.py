@@ -17,6 +17,12 @@ from agentforge_x.tools.adapters import (
     ToolNodeCompatibleTool,
     to_langgraph_tools,
 )
+from agentforge_x.tools.tool_discoverer import (
+    DiscoveredTool,
+    discover_mcp_tools,
+    discover_local_tools,
+    discover_all,
+)
 
 __all__ = [
     "MCPToolClientPool",
@@ -32,4 +38,8 @@ __all__ = [
     "DEFAULT_ALLOWLIST",
     "ToolNodeCompatibleTool",
     "to_langgraph_tools",
+    "DiscoveredTool",
+    "discover_mcp_tools",
+    "discover_local_tools",
+    "discover_all",
 ]
