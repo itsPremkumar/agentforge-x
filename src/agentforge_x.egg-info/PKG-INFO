@@ -1,0 +1,35 @@
+Metadata-Version: 2.4
+Name: agentforge-x
+Version: 1.0.0
+Summary: Six-agent fleet with versioned prompts, rubric judging, and thin kernel loop
+Author-email: Hermes Agent Team <agentforge-x@hermes.local>
+License: MIT
+Project-URL: Homepage, https://github.com/NousResearch/hermes-agent
+Project-URL: Documentation, https://hermes-agent.nousresearch.com/docs/
+Keywords: agents,ai,multi-agent,fleet,debate,consensus
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: typing-extensions>=4.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: mcp>=1.0
+Requires-Dist: langchain-core>=0.4
+Requires-Dist: langgraph>=1.0
+Requires-Dist: pydantic>=2.0
+Requires-Dist: httpx>=0.27
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Dynamic: license-file
+
+# agentforge-x
+
+Six-agent fleet with versioned planner/critic/executor prompts,
+rubric-based judging (reusing debate-room consensus scoring), and
+a thin kernel loop. Agents: researcher, coder, critic, tester, writer, ops.
