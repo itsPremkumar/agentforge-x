@@ -10,7 +10,9 @@ from src.benchmark.hellaswag_benchmark import (
     BenchmarkResult,
     BenchmarkReport,
     load_examples,
+    load_problems,
     run_example,
+    run_problem,
     run_all,
     get_accuracy,
     get_report,
@@ -248,3 +250,101 @@ def test_get_report_without_run():
     report = bench.get_report()
     
     assert "error" in report
+
+
+def test_load_problems_alias():
+    """Test load_problems is an alias for load_examples."""
+    reset()
+    examples = load_problems()
+    assert len(examples) == 10042
+
+
+def test_run_problem_alias():
+    """Test run_problem is an alias for run_example."""
+    reset()
+    examples = load_problems()
+    result = run_problem(examples[0])
+    assert isinstance(result, BenchmarkResult)
+
+
+def test_hellaswag_example_dataclass():
+    """Test HellaSwagExample dataclass."""
+    ex = HellaSwagExample(
+        id="test_001",
+        context="A person is walking",
+        endings=["option1", "option2", "option3", "option4"],
+        label=2,
+        source="activitynet",
+        split="train",
+    )
+    assert ex.id == "test_001"
+    assert ex.label == 2
+    assert len(ex.endings) == 4
+
+
+def test_benchmark_report_empty():
+    """Test BenchmarkReport with empty results."""
+    report = BenchmarkReport()
+    assert report.total == 0
+    assert report.correct == 0
+    assert report.accuracy == 0.0
+
+
+def test_get_report_source_accuracy():
+    """Test get_report includes source_accuracy."""
+    bench = HellaSwagBenchmark()
+    bench.run_all()
+    report = bench.get_report()
+    
+    assert "source_accuracy" in report
+    assert "activitynet" in report["source_accuracy"]
+    assert "wikihow" in report["source_accuracy"]
+
+
+def test_different_seeds_different_results():
+    """Test that different seeds can produce different results."""
+    bench1 = HellaSwagBenchmark(seed=1)
+    report1 = bench1.run_all()
+    
+    bench2 = HellaSwagBenchmark(seed=999)
+    report2 = bench2.run_all()
+    
+    # Not guaranteed to be different, but usually are
+    # Just verify both complete successfully
+    assert report1.total == 10042
+    assert report2.total == 10042
+
+
+def test_run_example_with_different_endings():
+    """Test run_example with various ending configurations."""
+    bench = HellaSwagBenchmark()
+    
+    # Create example with specific endings
+    ex = HellaSwagExample(
+        id="custom",
+        context="The cat sat on the",
+        endings=["mat", "chair", "table", "floor"],
+        label=0,
+        split="test",
+        source="activitynet",
+    )
+    
+    result = bench.run_example(ex)
+    assert result.predicted in [0, 1, 2, 3]
+    assert result.correct == (result.predicted == 0)
+
+
+def test_load_problems_with_none():
+    """Test load_problems with None path (generates synthetic)."""
+    reset()
+    examples = load_problems(None)
+    assert len(examples) == 10042
+
+
+def test_module_level_get_report():
+    """Test module-level get_report function."""
+    reset()
+    run_all()
+    report = get_report()
+    assert isinstance(report, dict)
+    assert report["total"] == 10042

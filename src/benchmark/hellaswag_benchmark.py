@@ -274,9 +274,19 @@ def load_examples(path: str | None = None) -> list[HellaSwagExample]:
     return _get_default().load_examples(path)
 
 
+def load_problems(path: str | None = None) -> list[HellaSwagExample]:
+    """Load HellaSwag problems. Alias for load_examples."""
+    return load_examples(path)
+
+
 def run_example(example: HellaSwagExample) -> BenchmarkResult:
     """Run a single example. Module-level convenience function."""
     return _get_default().run_example(example)
+
+
+def run_problem(example: HellaSwagExample) -> BenchmarkResult:
+    """Run a single problem. Alias for run_example."""
+    return run_example(example)
 
 
 def run_all() -> BenchmarkReport:
