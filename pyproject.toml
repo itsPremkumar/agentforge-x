@@ -39,8 +39,8 @@ mcp-toolbox-git-inspector = "mcp_toolbox.git_inspector:main"
 mcp-toolbox-board-reader = "mcp_toolbox.board_reader:main"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["mcp_toolbox*"]
+where = ["src"]
+include = ["mcp_toolbox*", "af_mcp*", "agentforge_x*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
